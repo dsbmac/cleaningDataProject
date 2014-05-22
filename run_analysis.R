@@ -28,9 +28,12 @@ trainData <- cbind(subjectTrain, yTrain, xTrain)
 
 #bind the rows of the data sets together
 alldata <- rbind(testData, trainData)
-
 #only include subject, activity the means and the stand deviations in the tidy data set
-tidydata <- alldata[, grep("mean|std|Activity|Subject", colnames(alldata))]
+alldata <- alldata[, grep("mean|std|Activity|Subject", colnames(alldata))]
+
+#get the averages by subject and activity
+tidydata <- aggregate(alldata, list(alldata$Subjects, alldata$Activity), mean)
+tidydata<-tidydata[,!(names(tidydata) %in% c("Group.1", "Group.2"))]
 
 #write the tidy data set to disk
 write.table(tidydata, "tidydata.txt", sep="\t")
